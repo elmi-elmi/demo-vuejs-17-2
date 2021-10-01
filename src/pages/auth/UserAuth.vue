@@ -1,21 +1,29 @@
 <template>
-  <base-card>
-    <form @submit.prevent="submitForm">
-      <div class="form-control">
-        <label for="email">Email</label>
-        <input type="email" v-model.trim="email" />
-      </div>
-      <div class="form-control">
-        <label for="password">Password</label>
-        <input type="password" v-model.trim="password" />
-      </div>
-      <p v-if="!formIsValid">what the f this shit</p>
-      <base-button>{{ submitButtonCaption }}</base-button>
-      <base-button type="button" mode="flat" @click="switchForm">
-        {{ switchModeButtonCaption }}</base-button
-      >
-    </form>
-  </base-card>
+  <div>
+    <base-dialog :show="!!error" title="An error occured" @close="handlerError">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <base-dialog :show="isLoading" title="Authenticating...">
+      <base-spinner></base-spinner>
+    </base-dialog>
+    <base-card>
+      <form @submit.prevent="submitForm">
+        <div class="form-control">
+          <label for="email">Email</label>
+          <input type="email" v-model.trim="email" />
+        </div>
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input type="password" v-model.trim="password" />
+        </div>
+        <p v-if="!formIsValid">what the f this shit</p>
+        <base-button>{{ submitButtonCaption }}</base-button>
+        <base-button type="button" mode="flat" @click="switchForm">
+          {{ switchModeButtonCaption }}</base-button
+        >
+      </form>
+    </base-card>
+  </div>
 </template>
 
 <script>
@@ -25,7 +33,9 @@ export default {
       email: '',
       password: '',
       mode: 'login',
-      formIsValid: true
+      formIsValid: true,
+      isLoading: false,
+      error: null
     };
   },
   computed: {
@@ -45,6 +55,9 @@ export default {
     }
   },
   methods: {
+    handlerError() {
+      this.error = null;
+    },
     switchForm() {
       if (this.mode === 'login') {
         this.mode = 'signup';
@@ -52,21 +65,27 @@ export default {
         this.mode = 'login';
       }
     },
-    submitForm() {
+    async submitForm() {
       if (this.email === '') {
         return false;
       }
       if (this.password === '') {
         return false;
       }
-      if (this.mode === 'login') {
-        //...
-      } else {
-        this.$store.dispatch('signup', {
-          email: this.email,
-          password: this.password
-        });
+      this.isLoading = true;
+      try {
+        if (this.mode === 'login') {
+          //...
+        } else {
+          await this.$store.dispatch('signup', {
+            email: this.email,
+            password: this.password
+          });
+        }
+      } catch (error) {
+        this.error = error.message || 'faild to authenticate. Try later.';
       }
+      this.isLoading = false;
     }
   }
 };
