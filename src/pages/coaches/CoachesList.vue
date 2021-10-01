@@ -22,7 +22,9 @@
             to="/register"
             >Register as Coach</base-button
           >
-          <base-button v-else link to="/auth">Login</base-button>
+          <base-button v-else link to="/auth?redirect=register"
+            >Login to Register as a Coach</base-button
+          >
         </div>
         <div v-if="isLoading">
           <base-spinner></base-spinner>

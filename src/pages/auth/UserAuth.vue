@@ -81,13 +81,12 @@ export default {
 
       try {
         if (this.mode === 'login') {
-          console.log(this.mode);
           await this.$store.dispatch('login', authActionPayload);
         } else {
-          console.log(this.mode);
-
           await this.$store.dispatch('signup', authActionPayload);
         }
+        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        this.$router.replace(redirectUrl);
       } catch (error) {
         console.log(authActionPayload);
         this.error = error.message || 'faild to authenticate. Try later.';

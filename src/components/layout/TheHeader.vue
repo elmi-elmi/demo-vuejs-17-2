@@ -30,6 +30,8 @@ export default {
   },
   methods: {
     logout() {
+      this.$router.replace('/coaches');
+
       this.$store.dispatch('logout');
     }
   }
