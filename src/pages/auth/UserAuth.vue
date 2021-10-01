@@ -73,16 +73,23 @@ export default {
         return false;
       }
       this.isLoading = true;
+      const authActionPayload = {
+        email: this.email,
+        password: this.password
+      };
+      console.log(authActionPayload);
+
       try {
         if (this.mode === 'login') {
-          //...
+          console.log(this.mode);
+          await this.$store.dispatch('login', authActionPayload);
         } else {
-          await this.$store.dispatch('signup', {
-            email: this.email,
-            password: this.password
-          });
+          console.log(this.mode);
+
+          await this.$store.dispatch('signup', authActionPayload);
         }
       } catch (error) {
+        console.log(authActionPayload);
         this.error = error.message || 'faild to authenticate. Try later.';
       }
       this.isLoading = false;
