@@ -59,6 +59,14 @@ export default {
       if (this.password === '') {
         return false;
       }
+      if (this.mode === 'login') {
+        //...
+      } else {
+        this.$store.dispatch('signup', {
+          email: this.email,
+          password: this.password
+        });
+      }
     }
   }
 };
