@@ -49,4 +49,11 @@ export default {
 
 
     },
+    logout(context) {
+        context.commit('setUser', {
+            token: null,
+            userId: null,
+            tokenExpiratio: null
+        })
+    },
 }
